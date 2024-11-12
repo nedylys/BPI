@@ -9,7 +9,7 @@ from re import finditer
 from random import choice, random
 from os import system
 
-nom_fichier=sys.argv[1]
+
 def get_mots(nom_fichier):
     """Renvoie un tableau dynamique sur tous les mots du fichier.
 
@@ -91,11 +91,15 @@ def genere_graphe(suivants):
     """
 
     # On créer un fichier au format texte dot, utilisé pour
-    # décrire un graphe.
+    # décrire un graphe
     with open("mots-suivants.dot", "w") as fichier_dot:
-        # TODO : écrire le graphe dans le fichier .dot
-        ...
-
+          fichier_dot.write('digraph  {'+'\n')
+          for elt in suivants:
+              mot=elt
+              for mots in suivants[elt]:
+                  mot_suiv=mots
+                  fichier_dot.write(f'{mot} -> {mot_suiv} [label={suivants[elt][mots]}]'+'\n')
+          fichier_dot.write('}') 
     # On utilise l'outil dot pour convertir le fichier .dot en image
     system("dot -Tpng mots-suivants.dot -o mots-suivants.png")
 
@@ -106,8 +110,16 @@ def get_suivant_aleatoire(mot, suivants):
     Le tirage aléatoire doit être pondéré par le nombre d'occurrences.
     Si le mot donne n'a pas de suivant, retourne un mot aléatoire.
     """
-    # TODO
-    ...
+    L=[]
+    if suivants[mot]=={}:
+        return mot
+    else:
+        for elt in suivants[mot]:
+            nbr=suivants[mot][elt]
+            for _ in range(nbr):
+                L.append(elt)
+        mot_choisi=choice(L)
+        return mot_choisi
 
 
 if __name__ == "__main__":
