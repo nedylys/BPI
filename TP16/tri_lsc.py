@@ -73,9 +73,12 @@ def init_liste_chainee(vals=None):
     return lsc
 
 def inverse(lsc):
-    cour=lsc.suiv
-    lsc.suiv=None
-    while cour is not None:
+    if lsc is None:
+      return None
+    else:
+        cour=lsc.suiv
+        lsc.suiv=None
+        while cour is not None:
            tmp=cour.suiv
            cour.suiv=lsc
            lsc=cour
@@ -89,15 +92,12 @@ def insere_triee(lsc,val):
     else:
         while cour.suiv is not None and cour.suiv.val < val:
           cour=cour.suiv
-        tmp=cour.suiv
-        cour.suiv=Cellule(val,tmp)
+        if cour is lsc:
+            return Cellule(val,lsc)
+        else:
+            tmp=cour.suiv
+            cour.suiv=Cellule(val,tmp)
         return lsc
-C1=Cellule(6,None)
-C2=Cellule(4,C1)
-C3=Cellule(2,C2)
-lsc=Cellule(1,C3)
-affiche(lsc)
-
 def supr_cellule(lsc,Cellule):
     cour=lsc
     if Cellule is lsc:
@@ -106,6 +106,25 @@ def supr_cellule(lsc,Cellule):
         while cour is not None and cour.suiv is not Cellule:
            cour=cour.suiv  
         cour.suiv=Cellule.suiv
+def max(lsc):
+    cour=lsc
+    i_max=lsc.suiv
+    val_max=lsc.val
+    val_max=lsc.val
+    while cour is not None:
+        if cour is not None and cour.val > val_max:
+            i_max=cour
+            val_max=cour.val
+        cour=cour.suiv
+    return i_max,val_max
+C1=Cellule(6,None)
+C2=Cellule(4,C1)
+C3=Cellule(2,C2)
+lsc=Cellule(1,C3)
+affiche(lsc)
+i_max,val_max=max(lsc)
+affiche(i_max),print(val_max)
+                      
 def trie_max(lsc):
     cour=lsc
     max=lsc.val
@@ -150,4 +169,4 @@ def main():
     affiche(lsc)
 
 
-main()
+#main()
