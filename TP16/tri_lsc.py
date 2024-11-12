@@ -100,23 +100,39 @@ def insere_triee(lsc,val):
         return lsc
 def supr_cellule(lsc,Cellule):
     cour=lsc
-    if Cellule is lsc:
+    if Cellule==lsc:
         lsc=lsc.suiv
     else:
         while cour is not None and cour.suiv is not Cellule:
            cour=cour.suiv  
-        cour.suiv=Cellule.suiv
+        if cour is not None:
+           cour.suiv=Cellule.suiv
+    return lsc
 def max(lsc):
+    if lsc is None:
+        return None,None
     cour=lsc
-    i_max=lsc.suiv
-    val_max=lsc.val
+    i_max=lsc
     val_max=lsc.val
     while cour is not None:
-        if cour is not None and cour.val > val_max:
+        if cour.val > val_max:
             i_max=cour
             val_max=cour.val
         cour=cour.suiv
     return i_max,val_max
+
+                      
+def trie_max(lsc):
+    lsc_triee=None
+    while lsc is not None:
+       i_max,_=max(lsc)
+       affiche(i_max),print("max")
+       supr_cellule(lsc,i_max)
+       affiche(lsc),print("liste")
+       i_max.suiv=lsc_triee
+       lsc_triee=i_max
+       affiche(lsc_triee),print("liste triee")
+    return lsc_triee
 C1=Cellule(6,None)
 C2=Cellule(4,C1)
 C3=Cellule(2,C2)
@@ -124,29 +140,6 @@ lsc=Cellule(1,C3)
 affiche(lsc)
 i_max,val_max=max(lsc)
 affiche(i_max),print(val_max)
-                      
-def trie_max(lsc):
-    cour=lsc
-    max=lsc.val
-    i_max=lsc
-    lsc_triee=None
-    while lsc is not None:
-       while cour is not None:
-         if cour.suiv is not None and cour.suiv.val > max:
-             max=cour.suiv.val
-             i_max=cour.suiv
-         cour=cour.suiv
-       supr_cellule(lsc,i_max)
-       lsc_triee=Cellule(lsc_triee,i_max.val)
-    return lsc_triee
-
-       
-
-
-
-        
-        
-
 def main():
     """
     Fonction principale
@@ -169,4 +162,4 @@ def main():
     affiche(lsc)
 
 
-#main()
+main()
