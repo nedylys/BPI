@@ -13,46 +13,43 @@ class Liste:
     def __init__(self,fictif):
         self.tete=Cellule(fictif)
         self.nombre=0
+        self.suiv=self.tete.suiv
     def __str__(self):
         chaine=""
-        if self.tete.suiv is not None:
-            cour=self.tete.suiv
-            while cour is not None:
-                chaine=str(cour.val) + " ->"
+        cour=self.tete.suiv
+        while cour is not None:
+                chaine+=str(cour.val) + " ->"
                 cour=cour.suiv
+        if chaine=="":
+            return "La liste est vide"
         return chaine
     
 class TableauListe:
     def __init__(self,len):
         self.len=len
-        self.list=[Liste("?") for i in range(len)]
+        self.list=[Liste("?") for _ in range(len)]
+        self.nbr_elem=0
     def hash(self,val):
         return val%self.len
     def insere(self,val):
         pos=self.hash(val)
-        for i in range(self.len):
-            if i==pos:
-                self.list[i].suiv=Cellule(val)
-                self.list[i].nombre+=1
+        cour=self.list[pos].tete
+        while cour.suiv is not None:
+            cour=cour.suiv
+        cour.suiv=Cellule(val)
+        self.list[pos].nombre+=1
+        self.nbr_elem+=1
     def est_presente(self,val):
-        pres=False
-        exit=False
         L=self.list
         for i in range(self.len):
             if L[i].nombre !=0:
-                cour=L[i]   
+                cour=L[i].tete.suiv   
                 while cour is not None:
                     if cour.val==val:
-                        pres=True
-                        exit=True
-                        break
+                        return True
                     cour=cour.suiv
-            if exit==True:
-                break
-        return pres
+        return False
     def supprimer(self,val):
-        pres=False
-        exit=False
         L=self.list
         for i in range(self.len):
             if L[i].nombre !=0:
@@ -60,30 +57,23 @@ class TableauListe:
                 prec=L[i].tete   
                 while cour is not None:
                     if cour.val==val:
-                        pres=True
-                        exit=True
                         prec.suiv=cour.suiv
-                        break
+                        L[i].nombre-=1
+                        self.nbr_elem-=1
+                        return True
                     prec=cour
                     cour=cour.suiv
-            if exit==True:
-                break
-        return pres
+        return False
     def __str__(self):
         L=self.list
         chaine=""
         for elt in L:
-            chaine+=str(elt)+'\n'
+            if str(elt)!="La liste est vide":
+              chaine+=str(elt)+'\n'
+        if chaine=="":
+            return "Le tableau est vide"
         return chaine
 
-
-                
-lsc=Liste("?")
-        
-       
-
-       
-              
        
 def main():
     """
@@ -104,11 +94,13 @@ def main():
             print(f"{val} est absente de la structure")
     print()
     print(struct)
-    while struct.len> 0:
+    print(struct.nbr_elem)
+    while struct.nbr_elem> 0:
         val = randint(0, 9)
         if struct.supprimer(val):
             print("\nSuppression de la valeur", val)
-            struct.afficher()
+            print(struct)
 
 
-#main()
+main()
+
