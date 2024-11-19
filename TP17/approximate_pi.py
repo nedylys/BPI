@@ -9,16 +9,15 @@ def main():
         n=int(sys.argv[2])
     cpt=0
     points=[]
-    bon_points=[]
     for _ in range(n):
         x=uniform(-1,1)
         y=uniform(-1,1)
         if sqrt(x**2+y**2)<=1:
             cpt+=1
-            bon_points.append((x,y))
+            points.append([x,y,True])
         else:
-            points.append((x,y))
+            points.append([x,y,False])
     print(cpt/n*4)
-    return cpt/n*4,points,bon_points
+    return cpt/n*4,points
 if __name__=="__main__":
     main()
