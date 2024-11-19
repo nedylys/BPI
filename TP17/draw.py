@@ -13,14 +13,16 @@ def genrerate_ppm_file():
     tmp=sys.argv[2]
     tmp_2=sys.argv[2]//10
     sys.argv[2]=tmp_2
-    cpt=0
-    color_data=[[background for _ in range(taille)]for _ in range(taille)]
-    print(len(color_data[0]))
-    while sys.argv[2]<=tmp:
+    cpt=1
+    ppm_files=[]
+    while cpt<=10:
+      color_data=[[background for _ in range(taille)]for _ in range(taille)]
       pi,points=approximate_pi.main()
       pi=f"{pi:.{nbr_virgule}f}"
       L=pi.split('.')
-      f=open(f'image{cpt}_{L[0]}-{L[1]}.pmp',"w")
+      name_file=f'image{cpt}_{L[0]}-{L[1]}.ppm'
+      f=open(name_file,"w")
+      ppm_files.append(name_file)
       f.write("P3\n")
       f.write(f'{taille} {taille}\n')
       f.write("255\n")
@@ -40,7 +42,7 @@ def genrerate_ppm_file():
       sys.argv[2]+=tmp_2
       cpt+=1
       f.close()
-    subprocess.run(["convert", "-delay", "10", "-loop", "0", ".ppm", "animation.gif"])
+    subprocess.run(["convert", "-delay", "100", "-loop", "0", *ppm_files, "animation.gif"])
     print("Animation GIF créée : animation.gif")
 genrerate_ppm_file()
 
