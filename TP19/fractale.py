@@ -1,14 +1,7 @@
-"""
-Un module pour générer des images au format SVG.
-
-Ce module fournit diverses fonctions pour générer des éléments SVG
-sous forme de chaînes de caractères.
-Ces chaînes DOIVENT être écrites dans un fichier en respectant la
-structure SVG pour obtenir une image valide.
-"""
-
-
-# À implémenter dans 'TP2. Module SVG'
+#! usr/bin/env python3
+import sys
+from math import cos,sin,sqrt,pi
+from random import uniform,randint
 def genere_balise_debut_image(largeur, hauteur):
     """
     Retourne la chaîne de caractères correspondant à la balise ouvrante pour
@@ -18,7 +11,6 @@ def genere_balise_debut_image(largeur, hauteur):
     Remarque : l'origine est en haut à gauche et l'axe des Y est orienté vers le
     bas.
     """
-    # TODO
     return(f'<svg xmlns="http://www.w3.org/2000/svg" version="1.1"'
           f'width="{largeur}" height="{hauteur}">'
     )
@@ -31,7 +23,6 @@ def genere_balise_fin_image():
     Cette balise doit être placée après tous les éléments de description de
     l'image, juste avant la fin du fichier.
     """
-    # TODO
     return("</svg>")
 
 
@@ -51,7 +42,6 @@ def genere_balise_debut_groupe(couleur_ligne, couleur_remplissage, epaisseur_lig
     Le paramètre d'épaisseur est un nombre positif ou nul, représentant la
     largeur du tracé d'une ligne en pixels.
     """
-    # TODO
     return (
         f'<g stroke="{couleur_ligne}" fill="{couleur_remplissage}" '
         f'stroke-width="{epaisseur_ligne}">'
@@ -64,9 +54,11 @@ def genere_balise_fin_groupe():
     Retourne la chaîne de caractères correspondant à la balise fermante pour un
     groupe d'éléments.
     """
-    # TODO
     return"</g>"
-
+def tracer_line(x1,y1,x2,y2):
+    return f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="black" stroke-width="2"/>'
+def distance(x1,y1,x2,y2):
+    return sqrt((x1-x2)**2+(y1-y2)**2)
 
 # À implémenter dans 'TP2. Module SVG'
 def genere_cercle(centre, rayon):
@@ -78,7 +70,6 @@ def genere_cercle(centre, rayon):
     centre est une structure de données de type tuple de deux nombres, et rayon
     un nombre de pixels indiquant le rayon du cercle.
     """
-    # TODO
     return f'<circle cx="{centre[0]}" cy="{centre[1]}" r="{rayon}" />'
 def genere_polygone(points):
     """
@@ -92,3 +83,28 @@ def genere_polygone(points):
     for i in range(n):
         print(points[i][0],end="");print(',',end="");print(points[i][1],end=" ")
     print('/>')
+def main():
+    f=open("fractale.svg","w")
+    hauteur=int(sys.argv[1])
+    largeur=int(sys.argv[2])
+    dmin=0.1
+    f.write(genere_balise_debut_image(largeur,hauteur))
+    x,y=largeur//2,hauteur*5e-2
+    nbr_branches=randint(0,4)
+    cpt=0
+    while cpt<nbr_branches:
+        tracer_rec(x,y,dmin,f)
+        cpt+=1
+    f.write(genere_balise_fin_groupe)
+def tracer_rec(x,y,dmin,f):
+   alpha=uniform(-pi,pi)
+   x1=cos(alpha)*x-y*sin(alpha)
+   y1=sin(alpha)*x+y*cos(alpha)
+   if distance(x,y,x1,y1)<dmin:
+       return False
+   else: 
+      f.write(tracer_line(x,y,x1,y1))
+      f.write('\n')
+      tracer_rec(x1,y1,dmin,f)
+main()
+      
