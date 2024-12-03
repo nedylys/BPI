@@ -56,7 +56,7 @@ def genere_balise_fin_groupe():
     """
     return"</g>"
 def tracer_line(x1,y1,x2,y2):
-    return f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="black" stroke-width="2"/>'
+    return f'   <line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="white" stroke-width="2"/>'
 def distance(x1,y1,x2,y2):
     return sqrt((x1-x2)**2+(y1-y2)**2)
 
@@ -89,22 +89,32 @@ def main():
     largeur=int(sys.argv[2])
     dmin=0.1
     f.write(genere_balise_debut_image(largeur,hauteur))
+    f.write('\n')
     x,y=largeur//2,hauteur*5e-2
-    nbr_branches=randint(0,4)
+    nbr_branches=randint(1,4)
     cpt=0
+    d=3
     while cpt<nbr_branches:
-        tracer_rec(x,y,dmin,f)
+        while True:
+          tracer_rec(x,y,d,dmin,f)
         cpt+=1
-    f.write(genere_balise_fin_groupe)
-def tracer_rec(x,y,dmin,f):
+    f.write(genere_balise_fin_image())
+def tracer_rec(x,y,d,dmin,f):
    alpha=uniform(-pi,pi)
    x1=cos(alpha)*x-y*sin(alpha)
    y1=sin(alpha)*x+y*cos(alpha)
+   d1=distance(x,y,x1,y1)
+   while d1!=d//2:
+     alpha=uniform(-pi,pi)
+     x1=cos(alpha)*x-y*sin(alpha)
+     y1=sin(alpha)*x+y*cos(alpha)
+     d1=distance(x,y,x1,y1)
+   d=d1
    if distance(x,y,x1,y1)<dmin:
        return False
    else: 
       f.write(tracer_line(x,y,x1,y1))
       f.write('\n')
-      tracer_rec(x1,y1,dmin,f)
+      tracer_rec(x1,y1,d,dmin,f)
 main()
       
