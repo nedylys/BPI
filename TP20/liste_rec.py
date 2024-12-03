@@ -36,11 +36,11 @@ def afficher(liste):
         print(caract,end=" ")
         afficher(liste.suiv)
 
-def separe(liste):
+def separer(liste):
    if liste is None:
       return (None,None,0)
    else:
-      l1,l2,i=separe(liste.suiv)
+      l1,l2,i=separer(liste.suiv)
       if i==0:
          liste.suiv=l1
          l1=liste
@@ -51,45 +51,36 @@ def separe(liste):
          i=0
    return (l1,l2,i)
 
-      
-liste=creer([0,1,8,9,7])
-l2,l3,_=separe(liste)
-afficher(l2)
-afficher(l3)
 def fusionner(liste1,liste2):
-    liste=None
-    cour1=liste1
-    cour2=liste2
-    if cour1 is None and cour2 is None:
-        return liste
+    if liste2 is None and liste1 is None:
+        return None
+    if liste1 is None:
+        return liste2
+    if liste2 is None:
+        return liste2
     else:
-        if cour1 is None:
-         tmp=cour2.val
-         cour2.suiv=liste
-         liste=cour2
-         cour2=tmp
-        if cour2 is None:
-         tmp=cour1.val
-         cour1.suiv=liste
-         liste=cour1
-         cour1=tmp
-        elif cour1.val<cour2.val:
-         tmp=cour1.val
-         cour1.suiv=liste
-         liste=cour1
-         cour1=tmp
-        else:
-         tmp=cour2.val
-         cour2.suiv=liste
-         liste=cour2
-         cour2=tmp
-        fusionner(cour1,cour2)
+       if liste1.val<liste2.val:
+           liste=fusionner(liste1.suiv,liste2)
+           liste1.suiv=liste
+           liste=liste1
+       else:
+           liste=fusionner(liste1,liste2.suiv)
+           liste2.suiv=liste
+           liste=liste2
+    return liste
 def tri_fusion(liste):
-   if liste is None:
-      return None
-   else:
-      liste1,liste2=separer(liste)
-      return fusionner(tri_fusion(liste1),tri_fusion(liste2))
+   if liste is None or liste.suiv is None:
+     return liste
+   liste1,liste2,_=separer(liste)
+   liste1=tri_fusion(liste1)
+   liste2=tri_fusion(liste2)
+   return fusionner(liste1,liste2)
+
+
+l=creer([0,9,4,7,3,8,4,3,9,8])
+afficher(l)
+l2=tri_fusion(l)
+afficher(l2)
 def main():
     """
       Fonction principale
@@ -101,7 +92,7 @@ def main():
         liste = creer(tab)
         print("Liste initiale  : ", end="")
         afficher(liste)
-        liste1, liste2 = separer(liste)
+        liste1, liste2,_ = separer(liste)
         print("Listes separees :")
         print("  ", end="")
         afficher(liste1)
