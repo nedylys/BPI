@@ -2,7 +2,7 @@
 """
 Partie "miniprojets" : génération de poèmes.
 """
-
+from random import choice
 import sys
 fichier=sys.argv[1]
 def lire_paquets_mots(nom_fichier):
@@ -15,7 +15,7 @@ def lire_paquets_mots(nom_fichier):
     fichier=open(nom_fichier,"r")
     dico={}
     cpt=0
-    dico[0]=[]
+    dico[cpt]=[]
     for ligne in fichier.readlines():
         if len(ligne)!=1:
             dico[cpt].append(ligne.strip())
@@ -36,6 +36,13 @@ def generer_poemes_3_vers(paquet0, paquet1, paquet2):
     - le deuxième vers appartenant au deuxième paquet paquet1 ;
     - et le troisième vers appartenant au troisième paquet paquet2.
     """
+    tab=[]
+    for elt0 in paquet0:
+        for elt1 in paquet1:
+            for elt2 in paquet2:
+                tab.append((elt0,elt1,elt2))
+    return tab
+
     
 
 
@@ -43,18 +50,22 @@ def poeme_aleatoire(poemes):
     """
     Choisit et renvoie un poeme tiré aléatoirement parmi tous les poèmes passés en paramètre.
     """
-    # TODO
-    ...
-
-
+    return choice(poemes)
+paquets_de_mots = lire_paquets_mots("poemes1.txt")
+L=generer_poemes_3_vers(paquets_de_mots[0], paquets_de_mots[1], paquets_de_mots[2])
+#print(poeme_aleatoire(L))
 
 def generer_indices(indices_max):
     """
     Produit des tuples contenant toutes les combinaisons de valeurs inférieures aux maximums
       contenus dans le tableau dynamique passé en paramètre `indices_max`.
     """
-    # TODO
-    ...
+    x,y,z=indices_max
+    for i in range(x+1):
+        for j in range(y+1):
+            for k in range(z+1):
+                yield (i,j,k)
+gen=generer_indices([4,3,1])
 
 
 def tous_les_poemes(paquets):
@@ -64,8 +75,23 @@ def tous_les_poemes(paquets):
       tableau dynamique ;
     - on renvoie donc un tableau dynamique de tableaux dynamiques de vers.
     """
-    # TODO
-    ...
+    tab=[]
+    indices_max=[]
+    for elt in paquets:
+        indices_max.append(len(paquets[elt]))
+    gen_indice=generer_indices(indices_max)
+    for tuple in gen_indice:
+        tmp=[]
+        cpt=0
+        for elt in tuple:
+            tmp.append(paquets[cpt][elt])
+            cpt+=1
+        tab.append(tmp)
+    return tab
+            
+
+
+    
 
 
 def main():
@@ -74,7 +100,7 @@ def main():
     """
     nom_fichier = "poemes1.txt"
     if len(sys.argv) == 1:
-        ...
+        pass
     elif len(sys.argv) == 2:
         nom_fichier = sys.argv[1]
     else:
@@ -106,5 +132,5 @@ def main():
     print()
 
 
-#if __name__ == "__main__":
-    #main()
+if __name__ == "__main__":
+    main()
