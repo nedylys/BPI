@@ -60,12 +60,23 @@ def generer_indices(indices_max):
     Produit des tuples contenant toutes les combinaisons de valeurs inférieures aux maximums
       contenus dans le tableau dynamique passé en paramètre `indices_max`.
     """
-    x,y,z=indices_max
-    for i in range(x+1):
-        for j in range(y+1):
-            for k in range(z+1):
-                yield (i,j,k)
-gen=generer_indices([4,3,1])
+    n=len(indices_max)
+    L=[0]*n
+    yield tuple(L)
+    while True:
+        for i in range(n - 1, -1, -1):
+            if L[i] < indices_max[i]:  
+                L[i] += 1
+                break
+            else:
+                L[i] = 0  
+        else:
+            
+            return
+        yield tuple(L)
+gen=generer_indices([4,3,1,4])
+for elt in gen:
+    print(elt)
 
 
 def tous_les_poemes(paquets):
@@ -84,7 +95,7 @@ def tous_les_poemes(paquets):
         tmp=[]
         cpt=0
         for elt in tuple:
-            tmp.append(paquets[cpt][elt])
+            tmp.append(paquets[cpt][elt-1])
             cpt+=1
         tab.append(tmp)
     return tab
@@ -132,5 +143,5 @@ def main():
     print()
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+    #main()
